@@ -1,0 +1,58 @@
+services:
+  web:
+    build: .
+    image: usagi-shop
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - vendor:/var/www/html/vendor:ro
+      - uploads:/var/www/html/public/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      composer:
+        condition: service_completed_successfully
+      mailhog:
+        condition: service_started
+    restart: unless-stopped
+
+  composer:
+    image: composer:2
+    working_dir: /app
+    command: >
+      sh -c "composer install --no-dev --no-interaction --no-progress --prefer-dist
+      && mkdir -p /uploads/avatars /uploads/products
+      && chown -R 33:33 /uploads"
+    volumes:
+      - ./composer.json:/app/composer.json:ro
+      - ./composer.lock:/app/composer.lock:ro
+      - vendor:/app/vendor
+      - uploads:/uploads
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: Asia/Tokyo
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci", "--default-time-zone=+09:00"]
+    volumes:
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "${MAILHOG_PORT:-8025}:8025"
+
+volumes:
+  vendor:
+  uploads:
+  dbdata:

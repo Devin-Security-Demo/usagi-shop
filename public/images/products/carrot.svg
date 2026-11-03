@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#fff3e6"/>
+  <circle cx="200" cy="200" r="150" fill="#fde3cc"/>
+  <g transform="translate(200 200) rotate(-35)">
+    <g transform="translate(-60 0)"><path d="M-22 -90 Q0 -100 22 -90 L6 110 Q0 122 -6 110 Z" fill="#f28c3c"/><path d="M-12 -50 h16 M-10 -10 h14 M-6 30 h12 M-4 70 h8" stroke="#d96f22" stroke-width="5" stroke-linecap="round"/><path d="M0 -92 L-24 -140 M0 -92 L0 -150 M0 -92 L24 -138" stroke="#6fae5f" stroke-width="11" stroke-linecap="round"/></g>
+    <g transform="translate(10 10)"><path d="M-22 -90 Q0 -100 22 -90 L6 110 Q0 122 -6 110 Z" fill="#f59a4c"/><path d="M-12 -50 h16 M-10 -10 h14 M-6 30 h12 M-4 70 h8" stroke="#d96f22" stroke-width="5" stroke-linecap="round"/><path d="M0 -92 L-24 -140 M0 -92 L0 -150 M0 -92 L24 -138" stroke="#7dbb6c" stroke-width="11" stroke-linecap="round"/></g>
+    <g transform="translate(80 -10)"><path d="M-22 -90 Q0 -100 22 -90 L6 110 Q0 122 -6 110 Z" fill="#ee8434"/><path d="M-12 -50 h16 M-10 -10 h14 M-6 30 h12 M-4 70 h8" stroke="#d96f22" stroke-width="5" stroke-linecap="round"/><path d="M0 -92 L-24 -140 M0 -92 L0 -150 M0 -92 L24 -138" stroke="#6fae5f" stroke-width="11" stroke-linecap="round"/></g>
+  </g>
+</svg>

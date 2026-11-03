@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#fff7ee"/>
+  <circle cx="200" cy="200" r="150" fill="#f6ead6"/>
+  <path d="M120 90 L280 90 L295 320 Q200 335 105 320 Z" fill="#f29e5c"/>
+  <path d="M120 90 L280 90 L282 115 L118 115 Z" fill="#e0823b"/>
+  <rect x="140" y="140" width="120" height="110" rx="14" fill="#fff"/>
+  <ellipse cx="182" cy="168" rx="7" ry="18" fill="#fde3cc" stroke="#5b4636" stroke-width="2" transform="rotate(-10 182 168)"/>
+  <ellipse cx="218" cy="168" rx="7" ry="18" fill="#fde3cc" stroke="#5b4636" stroke-width="2" transform="rotate(10 218 168)"/>
+  <circle cx="200" cy="200" r="22" fill="#fde3cc" stroke="#5b4636" stroke-width="2"/>
+  <circle cx="193" cy="197" r="2.5" fill="#5b4636"/><circle cx="207" cy="197" r="2.5" fill="#5b4636"/>
+  <text x="200" y="242" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="16" fill="#5b4636">PELLET</text>
+  <g fill="#b6895a"><ellipse cx="300" cy="320" rx="10" ry="6"/><ellipse cx="318" cy="306" rx="10" ry="6" transform="rotate(30 318 306)"/><ellipse cx="85" cy="322" rx="10" ry="6" transform="rotate(-20 85 322)"/><ellipse cx="320" cy="330" rx="10" ry="6" transform="rotate(60 320 330)"/></g>
+</svg>

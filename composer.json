@@ -1,0 +1,30 @@
+{
+    "name": "usagi-shoji/usagi-shop",
+    "description": "うさぎ商事オンラインショップ",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.2",
+        "guzzlehttp/guzzle": "6.5.5",
+        "phpmailer/phpmailer": "5.2.16"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Usagi\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Usagi\\Tests\\": "tests/Unit/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.32"
+        },
+        "sort-packages": true
+    }
+}

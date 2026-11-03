@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#f4f9ef"/>
+  <circle cx="200" cy="200" r="150" fill="#e3f1dd"/>
+  <path d="M95 320 L130 90 Q200 70 270 90 L305 320 Z" fill="#fff" stroke="#c9b99f" stroke-width="4"/>
+  <path d="M130 90 Q200 70 270 90 L262 130 Q200 115 138 130 Z" fill="#8cc084"/>
+  <rect x="140" y="160" width="120" height="70" rx="10" fill="#fffaf0" stroke="#e0d2b8" stroke-width="3"/>
+  <text x="200" y="192" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="22" fill="#5f9a57">TIMOTHY</text>
+  <text x="200" y="218" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="16" fill="#8a7a6b">1st CUT · 1kg</text>
+  <g stroke="#d9b45a" stroke-width="5" stroke-linecap="round">
+    <path d="M120 300 L150 250 M140 305 L165 245 M165 306 L178 240 M200 308 L200 238 M235 306 L222 240 M260 305 L235 245 M280 300 L250 250"/>
+  </g>
+  <g stroke="#a4c46a" stroke-width="4" stroke-linecap="round"><path d="M150 300 L170 255 M215 304 L210 250 M250 300 L238 255"/></g>
+</svg>

@@ -1,0 +1,8 @@
+/vendor/
+/.phpunit.cache/
+/.phpunit.result.cache
+/public/uploads/avatars/*
+!/public/uploads/avatars/.gitkeep
+/public/uploads/products/*
+!/public/uploads/products/.gitkeep
+.DS_Store

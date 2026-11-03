@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 360">
+  <ellipse cx="260" cy="320" rx="230" ry="26" fill="#f6ead6"/>
+  <g transform="translate(70 150)">
+    <path d="M0 160 L40 20 L120 20 L160 160 Z" fill="#e8c27a"/>
+    <path d="M10 160 L45 40 M30 160 L60 30 M60 160 L75 25 M90 160 L95 22 M120 160 L110 25 M145 160 L125 35" stroke="#c89c4e" stroke-width="3"/>
+    <rect x="30" y="60" width="100" height="44" rx="8" fill="#fff"/>
+    <text x="80" y="90" text-anchor="middle" font-size="20" font-weight="700" fill="#5f9a57" font-family="sans-serif">TIMOTHY</text>
+  </g>
+  <g transform="translate(250 90)">
+    <ellipse cx="70" cy="40" rx="18" ry="56" fill="#fff" stroke="#5b4636" stroke-width="4" transform="rotate(-14 70 40)"/>
+    <ellipse cx="70" cy="44" rx="8" ry="38" fill="#f7c6c7" transform="rotate(-14 70 44)"/>
+    <ellipse cx="128" cy="40" rx="18" ry="56" fill="#fff" stroke="#5b4636" stroke-width="4" transform="rotate(14 128 40)"/>
+    <ellipse cx="128" cy="44" rx="8" ry="38" fill="#f7c6c7" transform="rotate(14 128 44)"/>
+    <ellipse cx="110" cy="190" rx="92" ry="72" fill="#fff" stroke="#5b4636" stroke-width="4"/>
+    <ellipse cx="100" cy="124" rx="62" ry="54" fill="#fff" stroke="#5b4636" stroke-width="4"/>
+    <circle cx="78" cy="118" r="7" fill="#5b4636"/>
+    <circle cx="122" cy="118" r="7" fill="#5b4636"/>
+    <circle cx="80" cy="115" r="2" fill="#fff"/>
+    <circle cx="124" cy="115" r="2" fill="#fff"/>
+    <ellipse cx="62" cy="138" rx="10" ry="6" fill="#f7c6c7"/>
+    <ellipse cx="138" cy="138" rx="10" ry="6" fill="#f7c6c7"/>
+    <path d="M92 136 Q100 144 108 136" fill="none" stroke="#5b4636" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="196" cy="214" r="16" fill="#fff" stroke="#5b4636" stroke-width="4"/>
+  </g>
+  <g transform="translate(400 210) rotate(30)">
+    <path d="M0 0 Q12 -6 24 0 L14 90 Q12 96 10 90 Z" fill="#f29e5c"/>
+    <path d="M6 20 h10 M5 40 h10 M7 60 h7" stroke="#e0823b" stroke-width="3" stroke-linecap="round"/>
+    <path d="M12 0 L0 -26 M12 0 L12 -30 M12 0 L24 -24" stroke="#8cc084" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <circle cx="60" cy="60" r="10" fill="#f7c6c7" opacity=".7"/>
+  <circle cx="470" cy="70" r="14" fill="#8cc084" opacity=".5"/>
+  <circle cx="420" cy="30" r="7" fill="#f29e5c" opacity=".6"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#fbf7ef"/>
+  <circle cx="200" cy="200" r="150" fill="#f6ead6"/>
+  <path d="M90 210 L310 210 L290 310 Q200 325 110 310 Z" fill="#e8c69a" stroke="#c49a66" stroke-width="4"/>
+  <path d="M90 210 L120 120 L280 120 L310 210 Z" fill="#f3dcb8" stroke="#c49a66" stroke-width="4"/>
+  <rect x="130" y="140" width="140" height="56" rx="6" fill="#fff" opacity=".85"/>
+  <g stroke="#e0c7a2" stroke-width="3"><path d="M140 155 h120 M140 170 h120 M140 185 h120 M155 145 v46 M180 145 v46 M205 145 v46 M230 145 v46 M255 145 v46"/></g>
+  <g stroke="#d1ac7c" stroke-width="3"><path d="M110 250 h180 M115 280 h170"/></g>
+  <text x="200" y="300" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="20" fill="#9a6435">HINOKI</text>
+</svg>
