@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:13.6-slim
 ARG PHPV=8.2.32-1~deb12u1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apache2 libapache2-mod-php8.2=$PHPV php8.2=$PHPV php8.2-cli=$PHPV php8.2-common=$PHPV \
