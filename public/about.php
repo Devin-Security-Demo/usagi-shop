@@ -59,19 +59,5 @@ render('header', ['title' => 'このシステムについて']);
     </div>
   </div>
 
-  <section class="panel">
-    <h2 class="section-title mb-3">テスト用アカウント</h2>
-    <p class="small text-muted">パスワードはすべて <code>password</code> です。</p>
-    <div class="table-responsive">
-      <table class="table table-usagi small mb-0">
-        <thead><tr><th>メールアドレス</th><th>お名前</th><th>権限</th><th>できること</th></tr></thead>
-        <tbody>
-          <tr><td><code>admin@usagi.example</code></td><td>宇佐美 管理者</td><td><span class="badge rounded-pill badge-status-processing">管理者</span></td><td>管理画面（ダッシュボード・注文一覧・商品画像・CSV出力）</td></tr>
-          <tr><td><code>user1@usagi.example</code></td><td>佐藤 花子</td><td><span class="badge rounded-pill badge-status-completed">一般会員</span></td><td>購入、注文履歴、レビュー投稿（東京都）</td></tr>
-          <tr><td><code>user2@usagi.example</code></td><td>鈴木 一郎</td><td><span class="badge rounded-pill badge-status-completed">一般会員</span></td><td>購入、注文履歴、レビュー投稿（大阪府）</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
 </div>
 <?php render('footer'); ?>
