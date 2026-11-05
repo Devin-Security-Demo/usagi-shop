@@ -12,11 +12,15 @@ fail() { printf '  \033[31mFAIL\033[0m %s\n' "$1"; exit 1; }
 
 token() { grep -o 'name="_token" value="[^"]*"' "$1" | head -1 | sed 's/.*value="\([^"]*\)"/\1/'; }
 
-login() { # jar email
+set_password() { # email -> prints a fresh random password
+  docker compose exec -T web php /var/www/html/bin/set-password.php "$1"
+}
+
+login() { # jar email password
   local jar="$1" page="$WORK/login.html"
   curl -fsS -c "$jar" -b "$jar" "$BASE_URL/login.php" -o "$page"
   curl -fsS -c "$jar" -b "$jar" -o /dev/null -w '%{http_code} %{redirect_url}' \
-    --data-urlencode "_token=$(token "$page")" --data-urlencode "email=$2" --data-urlencode "password=password" \
+    --data-urlencode "_token=$(token "$page")" --data-urlencode "email=$2" --data-urlencode "password=$3" \
     "$BASE_URL/login.php"
 }
 
@@ -41,7 +45,11 @@ ok "product page"
 
 # login
 USER_JAR="$WORK/user.jar"
-res="$(login "$USER_JAR" user1@usagi.example)"
+res="$(login "$USER_JAR" user1@usagi.example password)"
+[[ "$res" == 200* ]] || fail "seeded password must not work ($res)"
+ok "seeded password rejected"
+pw="$(set_password user1@usagi.example)" || fail "set password for user1"
+res="$(login "$USER_JAR" user1@usagi.example "$pw")"
 [[ "$res" == 303* ]] || fail "login as user1 ($res)"
 curl -fsS -b "$USER_JAR" "$BASE_URL/orders.php" -o "$WORK/orders.html"
 grep -q 'UO-100231' "$WORK/orders.html" || fail "my orders"
@@ -74,7 +82,11 @@ ok "invoice download"
 
 # admin export
 ADMIN_JAR="$WORK/admin.jar"
-res="$(login "$ADMIN_JAR" admin@usagi.example)"
+res="$(login "$ADMIN_JAR" admin@usagi.example password)"
+[[ "$res" == 200* ]] || fail "admin default password must not work ($res)"
+ok "admin default password rejected"
+pw="$(set_password admin@usagi.example)" || fail "set password for admin"
+res="$(login "$ADMIN_JAR" admin@usagi.example "$pw")"
 [[ "$res" == 303* ]] || fail "login as admin ($res)"
 curl -fsS -b "$ADMIN_JAR" "$BASE_URL/admin/index.php" -o "$WORK/admin.html"
 grep -q '本日の注文数' "$WORK/admin.html" || fail "admin dashboard"

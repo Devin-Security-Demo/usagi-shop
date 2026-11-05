@@ -21,9 +21,14 @@ docker compose up -d
 初回起動時に Composer の依存関係インストールと DB の初期データ投入が自動で行われます。
 On first start, Composer dependencies are installed and the database is seeded automatically.
 
-## テスト用アカウント / Test accounts
+## アカウント / Accounts
 
-パスワードはすべて `password` / All passwords are `password`.
+初期データのアカウントにはログイン可能なパスワードが設定されていません。初回起動後、ランダムなパスワードを発行してください（パスワードは一度だけ表示されます）。
+Seeded accounts have no usable password. After the first start, issue a random one (printed once):
+
+```bash
+docker compose exec web php /var/www/html/bin/set-password.php admin@usagi.example
+```
 
 | メール / Email | 権限 / Role |
 | --- | --- |

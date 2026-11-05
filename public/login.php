@@ -51,10 +51,6 @@ render('header', ['title' => 'ログイン']);
       </div>
       <button type="submit" class="btn btn-primary w-100 py-2">ログイン</button>
     </form>
-    <div class="test-accounts small text-muted mt-4 pt-3 border-top">
-      <div class="fw-semibold mb-1">デモ用アカウント（パスワード：<code>password</code>）</div>
-      <div><code>user1@usagi.example</code> / <code>user2@usagi.example</code> / <code>admin@usagi.example</code></div>
-    </div>
   </div>
 </div>
 <?php render('footer'); ?>
