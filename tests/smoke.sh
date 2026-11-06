@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Smoke test for a running stack (docker compose up -d).
+# Smoke test for a running stack (nix run).
 set -euo pipefail
 
 BASE_URL="${BASE_URL:-http://localhost:8080}"
