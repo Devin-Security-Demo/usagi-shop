@@ -8,5 +8,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY php/99-app.ini /etc/php/8.2/apache2/conf.d/99-app.ini
 COPY . /var/www/html
-RUN a2enmod rewrite
+RUN a2enmod rewrite \
+ && sed -i 's/^Listen 80$/Listen 8080/' /etc/apache2/ports.conf \
+ && sed -i '/<IfModule ssl_module>/,/<\/IfModule>/d; /<IfModule mod_gnutls.c>/,/<\/IfModule>/d' /etc/apache2/ports.conf \
+ && mkdir -p /var/run/apache2 /var/lock/apache2 /var/log/apache2 \
+ && chown -R www-data:www-data /var/run/apache2 /var/lock/apache2 /var/log/apache2
+USER www-data
+EXPOSE 8080
 CMD ["apachectl","-D","FOREGROUND"]

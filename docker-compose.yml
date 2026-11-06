@@ -3,7 +3,7 @@ services:
     build: .
     image: usagi-shop
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "${APP_PORT:-8080}:8080"
     volumes:
       - vendor:/var/www/html/vendor:ro
       - uploads:/var/www/html/public/uploads
