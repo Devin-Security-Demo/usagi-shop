@@ -24,7 +24,7 @@
 | インフラ・依存関係 | `Dockerfile`, `docker-compose.yml`, `apache/`, `php/`, `.env`, `config/app.php`, `composer.json`/`composer.lock`, `.github/workflows/` |
 
 ## 4. エントリポイント
-- 匿名: `/`（検索 `q`）、`/product.php?id=`、`/cart.php`（POST）、`/login.php`、`/about.php`、`/api/shipping.php?zip=&subtotal=`（認証なし）、`remember` Cookie（`auth_restore_from_cookie()` が全リクエストで `unserialize()`）
+- 匿名: `/`（検索 `q`）、`/product.php?id=`、`/cart.php`（POST）、`/login.php`、`/about.php`、`/api/shipping.php?zip=&subtotal=`（認証なし）、`remember` Cookie（`lib/bootstrap.php` を読み込む全エンドポイント（`/api/shipping.php` を除く）で `auth_restore_from_cookie()` が `unserialize()`）
 - 会員: `/checkout.php`（注文作成・`?done=`）、`/orders.php`、`/order.php?id=`、`/invoice.php?file=`、`/account.php`（プロフィール・パスワード・アバター）、`/product.php`（レビュー POST）、`/logout.php`
 - 管理者: `/admin/`（ダッシュボード・商品画像アップロード）、`/admin/export.php`（全注文 CSV）
 - 公開ポート（compose）: web `8080`、Mailhog UI `8025`（認証なし、全注文確認メールを閲覧可能）
