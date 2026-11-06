@@ -39,6 +39,7 @@ let
     export DB_USERNAME="''${DB_USERNAME:-usagi_app}"
     export DB_PASSWORD="''${DB_PASSWORD:-Usag1Sh0p#Db2024!}"
     export DB_SOCKET="$STATE_DIR/mysql/mysqld.sock"
+    export DB_ROOT_CNF="$STATE_DIR/mysql/root.cnf"
     export TZ="''${TZ:-Asia/Tokyo}"
   '';
 
@@ -48,8 +49,17 @@ let
     text = envSetup + ''
       datadir="$STATE_DIR/mysql/data"
       if [ ! -d "$datadir/mysql" ]; then
+        rm -rf "$datadir"
         mkdir -p "$datadir"
-        mysqld --no-defaults --initialize-insecure --datadir="$datadir" --basedir=${mysql}
+        umask 077
+        # Random root password, set during --initialize (no network listener yet).
+        rootpw="$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+        initsql="$STATE_DIR/mysql/init-root.sql"
+        echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$rootpw';" > "$initsql"
+        mysqld --no-defaults --initialize-insecure --init-file="$initsql" \
+          --datadir="$datadir" --basedir=${mysql}
+        rm -f "$initsql"
+        printf '[client]\nuser=root\npassword=%s\n' "$rootpw" > "$DB_ROOT_CNF"
       fi
       exec mysqld --no-defaults \
         --datadir="$datadir" --basedir=${mysql} \
@@ -60,16 +70,26 @@ let
     '';
   };
 
-  # Equivalent of docker-entrypoint-initdb.d: runs once on an empty data dir.
+  # Equivalent of docker-entrypoint-initdb.d. The marker records which DB/user
+  # it was provisioned for; an interrupted seed is dropped and redone.
   dbInit = pkgs.writeShellApplication {
     name = "usagi-db-init";
     runtimeInputs = [ mysql pkgs.coreutils ];
     text = envSetup + ''
       marker="$STATE_DIR/mysql/.seeded"
-      [ -f "$marker" ] && exit 0
-      root() { mysql --no-defaults --protocol=socket --socket="$DB_SOCKET" -uroot "$@"; }
+      want="$(printf '%s\n%s\n%s\n' "$DB_DATABASE" "$DB_USERNAME" "$DB_PASSWORD" | sha256sum | cut -d' ' -f1)"
+      if [ -f "$marker" ]; then
+        if [ "$(cat "$marker")" = "$want" ]; then
+          exit 0
+        fi
+        echo "error: DB_DATABASE / DB_USERNAME / DB_PASSWORD differ from the seeded database." >&2
+        echo "Run 'nix run .#dev-reset' to re-create it with the new settings." >&2
+        exit 1
+      fi
+      root() { mysql --defaults-extra-file="$DB_ROOT_CNF" --protocol=socket --socket="$DB_SOCKET" "$@"; }
       root -e "
-        CREATE DATABASE IF NOT EXISTS \`$DB_DATABASE\`;
+        DROP DATABASE IF EXISTS \`$DB_DATABASE\`;
+        CREATE DATABASE \`$DB_DATABASE\`;
         CREATE USER IF NOT EXISTS '$DB_USERNAME'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
         GRANT ALL ON \`$DB_DATABASE\`.* TO '$DB_USERNAME'@'localhost';
         CREATE USER IF NOT EXISTS '$DB_USERNAME'@'127.0.0.1' IDENTIFIED BY '$DB_PASSWORD';
@@ -78,7 +98,7 @@ let
         echo "loading $f"
         root "$DB_DATABASE" < "$f"
       done
-      touch "$marker"
+      echo "$want" > "$marker"
     '';
   };
 
@@ -123,7 +143,7 @@ let
       db = {
         command = lib.getExe mysqlStart;
         readiness_probe = {
-          exec.command = "${mysql}/bin/mysqladmin --no-defaults --protocol=socket --socket=\"$STATE_DIR/mysql/mysqld.sock\" -uroot ping --silent";
+          exec.command = "${mysql}/bin/mysqladmin --no-defaults --protocol=socket --socket=\"$DB_SOCKET\" ping --silent";
           initial_delay_seconds = 1;
           period_seconds = 2;
           failure_threshold = 60;
