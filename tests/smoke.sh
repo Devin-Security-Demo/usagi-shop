@@ -47,6 +47,21 @@ curl -fsS -b "$USER_JAR" "$BASE_URL/orders.php" -o "$WORK/orders.html"
 grep -q 'UO-100231' "$WORK/orders.html" || fail "my orders"
 ok "login + my orders"
 
+# login must not be bypassable via SQL injection in the email field
+login_rejected() { # label email
+  local jar="$WORK/sqli.jar" page="$WORK/sqli-form.html" body="$WORK/sqli.html" code
+  rm -f "$jar"
+  curl -fsS -c "$jar" -b "$jar" "$BASE_URL/login.php" -o "$page"
+  code="$(curl -sS -c "$jar" -b "$jar" -o "$body" -w '%{http_code}' \
+    --data-urlencode "_token=$(token "$page")" --data-urlencode "email=$2" --data-urlencode "password=password" \
+    "$BASE_URL/login.php")"
+  [ "$code" = 200 ] && grep -q 'メールアドレスまたはパスワードが正しくありません。' "$body" \
+    || fail "SQL injection login ($1) must fail normally (got $code)"
+}
+login_rejected "OR 1=1" "' OR 1=1 -- "
+login_rejected "UNION" "x' UNION SELECT 1, 'x', 'x', '\$2y\$10\$VAkPcm.cBxpQGeJffNmKZeZOI0f5c6h6X3feF1PEYGS8XkzSSW14G', 'admin' -- "
+ok "login rejects SQL injection"
+
 # shipping api
 curl -fsS "$BASE_URL/api/shipping.php?zip=150-0001&subtotal=1000" | grep -q '"fee":660' || fail "shipping api"
 ok "shipping api"
