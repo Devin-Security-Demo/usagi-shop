@@ -71,6 +71,11 @@ ok "place order (${redirect##*done=})"
 code_type="$(curl -fsS -b "$USER_JAR" -o "$WORK/invoice.pdf" -w '%{http_code} %{content_type}' "$BASE_URL/invoice.php?id=1")"
 [[ "$code_type" == "200 application/pdf"* ]] && head -c 5 "$WORK/invoice.pdf" | grep -q '%PDF-' || fail "invoice download ($code_type)"
 ok "invoice download"
+for q in "id=3" "file=INV-100231.pdf" "file=../../.env"; do
+  code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/invoice.php?$q")"
+  [[ "$code" == 404 ]] || fail "invoice access control ($q -> $code)"
+done
+ok "invoice access control"
 
 # admin export
 ADMIN_JAR="$WORK/admin.jar"
