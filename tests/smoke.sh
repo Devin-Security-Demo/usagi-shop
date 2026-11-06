@@ -68,9 +68,16 @@ grep -q 'ご注文ありがとうございました' "$WORK/done.html" || fail "
 ok "place order (${redirect##*done=})"
 
 # invoice download
-code_type="$(curl -fsS -b "$USER_JAR" -o "$WORK/invoice.pdf" -w '%{http_code} %{content_type}' "$BASE_URL/invoice.php?file=INV-100231.pdf")"
+code_type="$(curl -fsS -b "$USER_JAR" -o "$WORK/invoice.pdf" -w '%{http_code} %{content_type}' "$BASE_URL/invoice.php?id=1")"
 [[ "$code_type" == "200 application/pdf"* ]] && head -c 5 "$WORK/invoice.pdf" | grep -q '%PDF-' || fail "invoice download ($code_type)"
 ok "invoice download"
+code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/invoice.php?id=3")"
+[ "$code" = 404 ] || fail "other user's invoice must be 404 ($code)"
+for q in "file=../../config/database.php" "file=INV-100233.pdf" "id=../../config/database.php"; do
+  code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/invoice.php?$q")"
+  [ "$code" = 404 ] || fail "invoice.php?$q must be 404 ($code)"
+done
+ok "invoice access is limited to own orders"
 
 # admin export
 ADMIN_JAR="$WORK/admin.jar"
