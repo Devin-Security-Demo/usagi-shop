@@ -4,6 +4,10 @@ services:
     image: usagi-shop
     ports:
       - "${APP_PORT:-8080}:80"
+    environment:
+      DB_DATABASE: ${MYSQL_DATABASE:?set MYSQL_DATABASE in .env}
+      DB_USERNAME: ${MYSQL_USER:?set MYSQL_USER in .env}
+      DB_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
     volumes:
       - vendor:/var/www/html/vendor:ro
       - uploads:/var/www/html/public/uploads
@@ -32,10 +36,10 @@ services:
   db:
     image: mysql:8.4
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?set MYSQL_DATABASE in .env}
+      MYSQL_USER: ${MYSQL_USER:?set MYSQL_USER in .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
       TZ: Asia/Tokyo
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci", "--default-time-zone=+09:00"]
     volumes:
