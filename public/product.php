@@ -119,7 +119,7 @@ render('header', ['title' => $product['name']]);
               <span class="review-date"><?= h(format_date($review['created_at'])) ?></span>
             </div>
             <div class="mb-2"><?= stars((int) $review['rating']) ?></div>
-            <p class="mb-0 small lh-lg"><?= nl2br($review['body']) ?></p>
+            <p class="mb-0 small lh-lg"><?= nl2br(h($review['body'])) ?></p>
           </div>
           <?php endforeach; ?>
         </div>
