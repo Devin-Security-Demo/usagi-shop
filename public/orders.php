@@ -38,7 +38,7 @@ render('header', ['title' => 'マイページ']);
             <td class="text-center"><?= order_status_badge($o['status']) ?></td>
             <td class="text-center">
               <?php if ($o['invoice_file']): ?>
-              <a class="btn btn-sm btn-outline-primary" href="/invoice.php?file=<?= urlencode($o['invoice_file']) ?>">請求書PDF</a>
+              <a class="btn btn-sm btn-outline-primary" href="/invoice.php?order=<?= (int) $o['id'] ?>">請求書PDF</a>
               <?php else: ?><span class="small text-muted">発送後に発行</span><?php endif; ?>
             </td>
             <td class="pe-4 text-end"><a href="/order.php?id=<?= (int) $o['id'] ?>" class="btn btn-sm btn-light">詳細</a></td>
