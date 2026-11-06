@@ -47,6 +47,14 @@ curl -fsS -b "$USER_JAR" "$BASE_URL/orders.php" -o "$WORK/orders.html"
 grep -q 'UO-100231' "$WORK/orders.html" || fail "my orders"
 ok "login + my orders"
 
+# login rejects SQL injection in email
+for payload in "' OR '1'='1" "admin@usagi.example' -- " "x' UNION SELECT 1, 'x', 'x', '\$2y\$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin' -- "; do
+  res="$(login "$WORK/sqli.jar" "$payload")"
+  [[ "$res" == 200* ]] || fail "sql injection in login email ($res)"
+  rm -f "$WORK/sqli.jar"
+done
+ok "login rejects sql injection"
+
 # shipping api
 curl -fsS "$BASE_URL/api/shipping.php?zip=150-0001&subtotal=1000" | grep -q '"fee":660' || fail "shipping api"
 ok "shipping api"
