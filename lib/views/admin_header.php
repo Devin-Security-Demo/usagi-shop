@@ -11,6 +11,7 @@ $active = $active ?? 'dashboard';
 <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/app.css">
+<script src="/js/theme.js"></script>
 </head>
 <body class="admin-body">
 <div class="admin-layout">
@@ -34,7 +35,10 @@ $active = $active ?? 'dashboard';
   <div class="admin-content">
     <header class="admin-topbar d-flex justify-content-between align-items-center">
       <h1 class="h5 mb-0"><?= h($title) ?></h1>
-      <form action="/logout.php" method="post"><?= csrf_field() ?><button class="btn btn-outline-secondary btn-sm">ログアウト</button></form>
+      <div class="d-flex align-items-center gap-2">
+        <?php require __DIR__ . '/theme_toggle.php'; ?>
+        <form action="/logout.php" method="post"><?= csrf_field() ?><button class="btn btn-outline-secondary btn-sm">ログアウト</button></form>
+      </div>
     </header>
     <div class="p-4">
 <?php foreach (take_flashes() as $flash): ?>
