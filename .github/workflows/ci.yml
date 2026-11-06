@@ -10,26 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          tools: composer:v2
-      - run: composer install --no-interaction --no-progress
-      - run: vendor/bin/phpunit
+      - uses: cachix/install-nix-action@v31
+      - run: nix develop --command composer install --no-interaction --no-progress
+      - run: nix develop --command vendor/bin/phpunit
 
   smoke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build image
-        run: docker compose build
+      - uses: cachix/install-nix-action@v31
+      - name: Build dev environment
+        run: nix build .#dev --no-link
       - name: Start stack
-        run: docker compose up -d
+        run: nix run .#dev -- --tui=false > dev.log 2>&1 &
       - name: Smoke test
         run: tests/smoke.sh
       - name: Logs on failure
         if: failure()
-        run: docker compose logs --no-color
+        run: cat dev.log
       - name: Stop stack
         if: always()
-        run: docker compose down -v
+        run: nix develop --command process-compose down --port 8090 || true

@@ -6,3 +6,5 @@
 /public/uploads/products/*
 !/public/uploads/products/.gitkeep
 .DS_Store
+/.devenv/
+/result
