@@ -47,6 +47,13 @@ curl -fsS -b "$USER_JAR" "$BASE_URL/orders.php" -o "$WORK/orders.html"
 grep -q 'UO-100231' "$WORK/orders.html" || fail "my orders"
 ok "login + my orders"
 
+# order detail: own order visible, other customer's order hidden (user1 owns id=1, user2 owns id=3)
+curl -fsS -b "$USER_JAR" "$BASE_URL/order.php?id=1" -o "$WORK/order1.html"
+grep -q 'UO-100231' "$WORK/order1.html" || fail "own order detail"
+code="$(curl -sS -b "$USER_JAR" -o "$WORK/order3.html" -w '%{http_code}' "$BASE_URL/order.php?id=3")"
+[ "$code" = 404 ] && ! grep -q 'UO-100233' "$WORK/order3.html" || fail "other customer's order must be 404 ($code)"
+ok "order detail restricted to owner"
+
 # shipping api
 curl -fsS "$BASE_URL/api/shipping.php?zip=150-0001&subtotal=1000" | grep -q '"fee":660' || fail "shipping api"
 ok "shipping api"
