@@ -33,6 +33,10 @@ $q = $_GET['q'] ?? '';
             <input class="form-control" type="search" name="q" value="<?= h(is_string($q) ? $q : '') ?>" placeholder="牧草・おやつ・グッズを検索" aria-label="商品検索">
             <button class="btn btn-search" type="submit">検索</button>
           </div>
+          <div class="form-check form-check-inline small mt-1 ms-3 mb-0 instock-check">
+            <input class="form-check-input" type="checkbox" id="instock-header" name="in_stock" value="1"<?= ($_GET['in_stock'] ?? '') === '1' ? ' checked' : '' ?>>
+            <label class="form-check-label" for="instock-header">在庫ありのみ</label>
+          </div>
         </form>
         <ul class="navbar-nav align-items-lg-center gap-lg-2">
           <li class="nav-item">

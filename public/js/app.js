@@ -61,3 +61,7 @@
     }, 4000);
   });
 })(jQuery);
+
+document.querySelectorAll('.js-autosubmit').forEach(function (el) {
+  el.addEventListener('change', function () { el.form.submit(); });
+});

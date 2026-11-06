@@ -152,3 +152,8 @@ a { text-decoration: none; }
   .admin-layout { flex-direction: column; }
   .admin-sidebar { width: 100%; }
 }
+
+.instock-switch { background: #fff; border: 1px solid var(--usagi-cream-dark); border-radius: 2rem; padding: .3rem .9rem .3rem 3.1rem; }
+.instock-switch .form-check-input { cursor: pointer; width: 2.4em; height: 1.25em; }
+.instock-switch .form-check-label { margin-left: .5rem; }
+.instock-check label { color: var(--usagi-muted); }

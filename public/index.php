@@ -3,15 +3,27 @@
 require dirname(__DIR__) . '/lib/bootstrap.php';
 
 $q = isset($_GET['q']) && is_string($_GET['q']) ? trim($_GET['q']) : '';
+$inStock = ($_GET['in_stock'] ?? '') === '1';
 
+$where = [];
+$params = [];
 if ($q !== '') {
     $like = '%' . addcslashes($q, '%_\\') . '%';
-    $stmt = db()->prepare('SELECT * FROM products WHERE name LIKE ? OR summary LIKE ? OR category LIKE ? ORDER BY id');
-    $stmt->execute([$like, $like, $like]);
-} else {
-    $stmt = db()->query('SELECT * FROM products ORDER BY id');
+    $where[] = '(name LIKE ? OR summary LIKE ? OR category LIKE ?)';
+    array_push($params, $like, $like, $like);
 }
+if ($inStock) {
+    $where[] = 'stock > 0';
+}
+$stmt = db()->prepare('SELECT * FROM products' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY id');
+$stmt->execute($params);
 $products = $stmt->fetchAll();
+$hiddenSoldOut = 0;
+if ($inStock) {
+    $countStmt = db()->prepare('SELECT COUNT(*) FROM products WHERE stock = 0' . ($q !== '' ? ' AND (name LIKE ? OR summary LIKE ? OR category LIKE ?)' : ''));
+    $countStmt->execute($params);
+    $hiddenSoldOut = (int) $countStmt->fetchColumn();
+}
 
 $ratings = [];
 foreach (db()->query('SELECT product_id, AVG(rating) AS avg_rating, COUNT(*) AS cnt FROM reviews GROUP BY product_id') as $row) {
@@ -42,7 +54,14 @@ render('header', ['title' => $q !== '' ? '「' . $q . '」の検索結果' : '�
 
   <div class="d-flex justify-content-between align-items-end mb-3">
     <h2 class="section-title mb-0"><?= $q !== '' ? '「' . h($q) . '」の検索結果' : '商品一覧' ?></h2>
-    <span class="text-muted small"><?= count($products) ?>件</span>
+    <div class="d-flex align-items-center gap-3">
+      <form action="/index.php" method="get" class="form-check form-switch mb-0 instock-switch">
+        <?php if ($q !== ''): ?><input type="hidden" name="q" value="<?= h($q) ?>"><?php endif; ?>
+        <input class="form-check-input js-autosubmit" type="checkbox" role="switch" id="instock-list" name="in_stock" value="1"<?= $inStock ? ' checked' : '' ?>>
+        <label class="form-check-label small fw-semibold" for="instock-list">在庫ありのみ表示</label>
+      </form>
+      <span class="text-muted small"><?= count($products) ?>件<?php if ($hiddenSoldOut > 0): ?><span class="ms-1">（在庫切れ <?= $hiddenSoldOut ?>件を非表示）</span><?php endif; ?></span>
+    </div>
   </div>
 
   <?php if (!$products): ?>
