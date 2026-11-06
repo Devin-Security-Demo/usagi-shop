@@ -122,3 +122,17 @@ function not_found(): never
     require APP_ROOT . '/public/404.php';
     exit;
 }
+
+function invoice_path(string $file, ?string $dir = null): ?string
+{
+    $base = realpath($dir ?? APP_ROOT . '/storage/invoices');
+    $name = basename($file);
+    if ($base === false || $name !== $file || !preg_match('/\AINV-\d+\.pdf\z/', $name)) {
+        return null;
+    }
+    $path = realpath($base . DIRECTORY_SEPARATOR . $name);
+    if ($path === false || !is_file($path) || !str_starts_with($path, $base . DIRECTORY_SEPARATOR)) {
+        return null;
+    }
+    return $path;
+}

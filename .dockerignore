@@ -3,3 +3,4 @@
 vendor
 docs
 tests
+.env
