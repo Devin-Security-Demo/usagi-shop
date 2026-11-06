@@ -47,6 +47,14 @@ curl -fsS -b "$USER_JAR" "$BASE_URL/orders.php" -o "$WORK/orders.html"
 grep -q 'UO-100231' "$WORK/orders.html" || fail "my orders"
 ok "login + my orders"
 
+# review body is HTML-escaped
+curl -fsS -b "$USER_JAR" -c "$USER_JAR" "$BASE_URL/product.php?id=3" -o "$WORK/p3.html"
+curl -fsS -b "$USER_JAR" -c "$USER_JAR" -o /dev/null --data-urlencode "_token=$(token "$WORK/p3.html")" \
+  --data-urlencode "nickname=smoke" -d rating=5 --data-urlencode "body=<script>alert(1)</script>" "$BASE_URL/product.php?id=3"
+curl -fsS "$BASE_URL/product.php?id=3" -o "$WORK/p3.html"
+grep -q '&lt;script&gt;alert(1)&lt;/script&gt;' "$WORK/p3.html" && ! grep -q '<script>alert(1)</script>' "$WORK/p3.html" || fail "review body escaping"
+ok "review body escaped"
+
 # shipping api
 curl -fsS "$BASE_URL/api/shipping.php?zip=150-0001&subtotal=1000" | grep -q '"fee":660' || fail "shipping api"
 ok "shipping api"
