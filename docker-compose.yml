@@ -14,6 +14,8 @@ services:
         condition: service_completed_successfully
       mailhog:
         condition: service_started
+    environment:
+      APP_ENV: ${APP_ENV:-production}
     restart: unless-stopped
 
   composer:
@@ -37,6 +39,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: Asia/Tokyo
+      APP_ENV: ${APP_ENV:-production}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:-}
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci", "--default-time-zone=+09:00"]
     volumes:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro

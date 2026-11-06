@@ -59,6 +59,7 @@ render('header', ['title' => 'このシステムについて']);
     </div>
   </div>
 
+  <?php if (config('env') === 'development'): ?>
   <section class="panel">
     <h2 class="section-title mb-3">テスト用アカウント</h2>
     <p class="small text-muted">パスワードはすべて <code>password</code> です。</p>
@@ -73,5 +74,6 @@ render('header', ['title' => 'このシステムについて']);
       </table>
     </div>
   </section>
+  <?php endif; ?>
 </div>
 <?php render('footer'); ?>

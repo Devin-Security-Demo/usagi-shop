@@ -25,6 +25,8 @@ jobs:
         run: docker compose build
       - name: Start stack
         run: docker compose up -d
+        env:
+          APP_ENV: development
       - name: Smoke test
         run: tests/smoke.sh
       - name: Logs on failure
