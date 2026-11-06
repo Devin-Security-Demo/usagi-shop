@@ -11,8 +11,8 @@ if (!$id) {
     not_found();
 }
 
-$stmt = db()->prepare('SELECT * FROM orders WHERE id = ?');
-$stmt->execute([$id]);
+$stmt = db()->prepare('SELECT * FROM orders WHERE id = ? AND user_id = ?');
+$stmt->execute([$id, $user['id']]);
 $order = $stmt->fetch();
 if (!$order) {
     not_found();
