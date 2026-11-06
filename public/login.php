@@ -14,8 +14,7 @@ if (is_post()) {
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
 
-    $sql = "SELECT id, name, email, password_hash, role FROM users WHERE email = '" . $email . "' LIMIT 1";
-    $user = db()->query($sql)->fetch();
+    $user = (new Usagi\UserRepository(db()))->findByEmail($email);
 
     if ($user && password_verify($password, $user['password_hash'])) {
         login_user($user, !empty($_POST['remember']));
