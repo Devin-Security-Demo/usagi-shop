@@ -31,14 +31,19 @@ if (is_post()) {
         if (!is_dir($workDir)) {
             mkdir($workDir, 0700, true);
         }
-        $source = $workDir . '/' . $upload['name'];
-        move_uploaded_file($upload['tmp_name'], $source);
+        $format = $ext === 'png' ? 'png' : 'jpg';
+        $source = $workDir . '/' . bin2hex(random_bytes(8)) . '.' . $format;
+        $moved = move_uploaded_file($upload['tmp_name'], $source);
 
-        $filename = 'p' . $product['id'] . '_' . bin2hex(random_bytes(6)) . '.' . ($ext === 'png' ? 'png' : 'jpg');
+        $filename = 'p' . $product['id'] . '_' . bin2hex(random_bytes(6)) . '.' . $format;
         $dest = APP_ROOT . '/public/uploads/products/' . $filename;
 
-        exec("convert " . $workDir . "/" . $upload['name'] . " -resize 800x800 " . $dest . " 2>&1", $output, $status);
-        if ($status !== 0 || !is_file($dest)) {
+        $status = 1;
+        if ($moved) {
+            $cmd = 'convert ' . escapeshellarg($format . ':' . $source) . ' -resize 800x800 ' . escapeshellarg($format . ':' . $dest) . ' 2>&1';
+            exec($cmd, $output, $status);
+        }
+        if ($moved && ($status !== 0 || !is_file($dest))) {
             $img = @imagecreatefromstring((string) file_get_contents($source));
             if ($img !== false) {
                 $w = imagesx($img);
