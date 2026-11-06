@@ -39,7 +39,7 @@ render('header', ['title' => '注文詳細 ' . $order['order_no']]);
     <div class="d-flex align-items-center gap-3">
       <?= order_status_badge($order['status']) ?>
       <?php if ($order['invoice_file']): ?>
-      <a class="btn btn-primary" href="/invoice.php?file=<?= urlencode($order['invoice_file']) ?>">請求書PDFダウンロード</a>
+      <a class="btn btn-primary" href="/invoice.php?order=<?= (int) $order['id'] ?>">請求書PDFダウンロード</a>
       <?php else: ?>
       <button class="btn btn-outline-secondary" disabled>請求書は発送後に発行されます</button>
       <?php endif; ?>
