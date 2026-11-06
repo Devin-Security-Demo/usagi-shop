@@ -41,12 +41,23 @@ function issue_remember_token(int $userId): void
     $stmt = db()->prepare('INSERT INTO remember_tokens (user_id, token_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? DAY))');
     $stmt->execute([$userId, hash('sha256', $token), $days]);
 
-    setcookie(REMEMBER_COOKIE, serialize(['uid' => $userId, 'token' => $token]), [
+    setcookie(REMEMBER_COOKIE, $userId . ':' . $token, [
         'expires'  => time() + $days * 86400,
         'path'     => '/',
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
+}
+
+/**
+ * @return array{uid: int, token: string}|null
+ */
+function parse_remember_cookie(mixed $value): ?array
+{
+    if (!is_string($value) || !preg_match('/\A([1-9][0-9]{0,18}):([0-9a-f]{64})\z/', $value, $m)) {
+        return null;
+    }
+    return ['uid' => (int) $m[1], 'token' => $m[2]];
 }
 
 function auth_restore_from_cookie(): void
@@ -55,8 +66,8 @@ function auth_restore_from_cookie(): void
         return;
     }
 
-    $data = unserialize($_COOKIE[REMEMBER_COOKIE]);
-    if (!is_array($data) || !isset($data['uid'], $data['token']) || !is_string($data['token'])) {
+    $data = parse_remember_cookie($_COOKIE[REMEMBER_COOKIE]);
+    if ($data === null) {
         forget_remember_cookie();
         return;
     }
