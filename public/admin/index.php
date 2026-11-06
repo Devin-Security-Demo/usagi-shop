@@ -27,28 +27,25 @@ if (is_post()) {
     }
 
     if (!$errors) {
-        $workDir = sys_get_temp_dir() . '/usagi-upload';
-        if (!is_dir($workDir)) {
-            mkdir($workDir, 0700, true);
-        }
-        $source = $workDir . '/' . $upload['name'];
-        move_uploaded_file($upload['tmp_name'], $source);
-
         $filename = 'p' . $product['id'] . '_' . bin2hex(random_bytes(6)) . '.' . ($ext === 'png' ? 'png' : 'jpg');
         $dest = APP_ROOT . '/public/uploads/products/' . $filename;
 
-        exec("convert " . $workDir . "/" . $upload['name'] . " -resize 800x800 " . $dest . " 2>&1", $output, $status);
-        if ($status !== 0 || !is_file($dest)) {
-            $img = @imagecreatefromstring((string) file_get_contents($source));
-            if ($img !== false) {
-                $w = imagesx($img);
-                $h = imagesy($img);
-                $scale = min(1, 800 / max($w, $h));
-                $resized = imagescale($img, max(1, (int) round($w * $scale)), max(1, (int) round($h * $scale)));
-                $ext === 'png' ? imagepng($resized, $dest) : imagejpeg($resized, $dest, 88);
+        $img = @imagecreatefromstring((string) file_get_contents($upload['tmp_name']));
+        if ($img !== false) {
+            $w = imagesx($img);
+            $h = imagesy($img);
+            $scale = min(1, 800 / max($w, $h));
+            $resized = imagescale($img, max(1, (int) round($w * $scale)), max(1, (int) round($h * $scale)));
+            if ($resized !== false) {
+                if ($ext === 'png') {
+                    imagealphablending($resized, false);
+                    imagesavealpha($resized, true);
+                    imagepng($resized, $dest);
+                } else {
+                    imagejpeg($resized, $dest, 88);
+                }
             }
         }
-        @unlink($source);
 
         if (is_file($dest)) {
             db()->prepare('UPDATE products SET image = ? WHERE id = ?')->execute(['/uploads/products/' . $filename, $product['id']]);
