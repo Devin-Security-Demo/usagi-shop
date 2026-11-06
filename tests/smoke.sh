@@ -83,9 +83,25 @@ curl -fsS -b "$ADMIN_JAR" -D "$WORK/export.h" "$BASE_URL/admin/export.php" -o "$
 grep -qi 'content-type: text/csv' "$WORK/export.h" && grep -q 'UO-100231' "$WORK/export.csv" || fail "admin export"
 ok "admin csv export"
 
+# admin add product
+SKU="SMOKE-$(date +%s)"
+curl -fsS -b "$ADMIN_JAR" -c "$ADMIN_JAR" "$BASE_URL/admin/products.php" -o "$WORK/new.html"
+grep -q '新しい商品を追加' "$WORK/new.html" || fail "admin product form"
+res="$(curl -fsS -b "$ADMIN_JAR" -c "$ADMIN_JAR" -o /dev/null -w '%{http_code} %{redirect_url}' \
+  --data-urlencode "_token=$(token "$WORK/new.html")" --data-urlencode "sku=$SKU" \
+  --data-urlencode "name=スモークテスト商品 $SKU" --data-urlencode "category=グッズ" \
+  --data-urlencode "summary=スモークテスト用" --data-urlencode "description=スモークテスト用の商品です。" \
+  -d price=1000 -d list_price= -d stock=3 -d tag= "$BASE_URL/admin/products.php")"
+[[ "$res" == "303 "*"/admin/products.php" ]] || fail "admin add product ($res)"
+curl -fsS "$BASE_URL/index.php?q=$SKU" -o "$WORK/new-search.html"
+grep -q "スモークテスト商品 $SKU" "$WORK/new-search.html" || fail "added product is listed"
+ok "admin add product ($SKU)"
+
 # access control
 code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/admin/export.php")"
 [ "$code" = 403 ] || fail "customer must not export ($code)"
+code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/admin/products.php")"
+[ "$code" = 403 ] || fail "customer must not add products ($code)"
 ok "admin pages require admin"
 
 echo "All $PASS checks passed."
