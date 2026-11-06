@@ -3,6 +3,7 @@
 return [
     'name'        => 'うさぎ商事オンラインショップ',
     'company'     => '株式会社うさぎ商事',
+    'env'         => getenv('APP_ENV') ?: 'production',
     'base_url'    => 'http://localhost:8080',
     'shipping_api' => 'http://127.0.0.1/api/shipping.php',
     'free_shipping_threshold' => 5000,

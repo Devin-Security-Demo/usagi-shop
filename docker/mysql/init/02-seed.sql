@@ -1,9 +1,11 @@
 SET NAMES utf8mb4;
 
+-- password_hash '!' never verifies; 03-accounts.sh sets real hashes.
+
 INSERT INTO users (id, name, email, password_hash, role, zip, address, phone) VALUES
-(1, '宇佐美 管理者', 'admin@usagi.example', '$2y$10$VAkPcm.cBxpQGeJffNmKZeZOI0f5c6h6X3feF1PEYGS8XkzSSW14G', 'admin', '150-0001', '東京都渋谷区神宮前1-2-3 うさぎビル5F', '03-1234-5678'),
-(2, '佐藤 花子', 'user1@usagi.example', '$2y$10$VAkPcm.cBxpQGeJffNmKZeZOI0f5c6h6X3feF1PEYGS8XkzSSW14G', 'customer', '180-0004', '東京都武蔵野市吉祥寺本町2-8-1 ラパンハイツ203', '090-1111-2222'),
-(3, '鈴木 一郎', 'user2@usagi.example', '$2y$10$VAkPcm.cBxpQGeJffNmKZeZOI0f5c6h6X3feF1PEYGS8XkzSSW14G', 'customer', '530-0001', '大阪府大阪市北区梅田3-1-1 グランドうさぎ1204', '080-3333-4444');
+(1, '宇佐美 管理者', 'admin@usagi.example', '!', 'admin', '150-0001', '東京都渋谷区神宮前1-2-3 うさぎビル5F', '03-1234-5678'),
+(2, '佐藤 花子', 'user1@usagi.example', '!', 'customer', '180-0004', '東京都武蔵野市吉祥寺本町2-8-1 ラパンハイツ203', '090-1111-2222'),
+(3, '鈴木 一郎', 'user2@usagi.example', '!', 'customer', '530-0001', '大阪府大阪市北区梅田3-1-1 グランドうさぎ1204', '080-3333-4444');
 
 INSERT INTO products (id, sku, name, category, summary, description, price, list_price, stock, tag, image, featured) VALUES
 (1, 'US-SN-001', '国産にんじんスティック 80g', 'おやつ', '契約農家のにんじんを低温乾燥。カリッと食感のごほうびおやつ。',
