@@ -68,9 +68,18 @@ grep -q 'ご注文ありがとうございました' "$WORK/done.html" || fail "
 ok "place order (${redirect##*done=})"
 
 # invoice download
-code_type="$(curl -fsS -b "$USER_JAR" -o "$WORK/invoice.pdf" -w '%{http_code} %{content_type}' "$BASE_URL/invoice.php?file=INV-100231.pdf")"
+code_type="$(curl -fsS -b "$USER_JAR" -o "$WORK/invoice.pdf" -w '%{http_code} %{content_type}' "$BASE_URL/invoice.php?order=1")"
 [[ "$code_type" == "200 application/pdf"* ]] && head -c 5 "$WORK/invoice.pdf" | grep -q '%PDF-' || fail "invoice download ($code_type)"
 ok "invoice download"
+
+# order ownership: user1 must not see user2's order (id=3) or its invoice, nor traverse paths
+code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/order.php?id=3")"
+[[ "$code" == 404 ]] || fail "other user's order detail ($code)"
+code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/invoice.php?order=3")"
+[[ "$code" == 404 ]] || fail "other user's invoice ($code)"
+code="$(curl -sS -b "$USER_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/invoice.php?file=../../config/database.php")"
+[[ "$code" == 404 ]] || fail "invoice path traversal ($code)"
+ok "order + invoice ownership"
 
 # admin export
 ADMIN_JAR="$WORK/admin.jar"
