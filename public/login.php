@@ -14,8 +14,9 @@ if (is_post()) {
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
 
-    $sql = "SELECT id, name, email, password_hash, role FROM users WHERE email = '" . $email . "' LIMIT 1";
-    $user = db()->query($sql)->fetch();
+    $stmt = db()->prepare('SELECT id, name, email, password_hash, role FROM users WHERE email = ? LIMIT 1');
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password_hash'])) {
         login_user($user, !empty($_POST['remember']));
