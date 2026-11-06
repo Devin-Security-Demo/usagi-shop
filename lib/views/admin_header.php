@@ -22,6 +22,7 @@ $active = $active ?? 'dashboard';
     <nav class="nav flex-column gap-1">
       <a class="nav-link<?= $active === 'dashboard' ? ' active' : '' ?>" href="/admin/index.php">ダッシュボード</a>
       <a class="nav-link" href="/admin/index.php#orders">注文一覧</a>
+      <a class="nav-link<?= $active === 'product_new' ? ' active' : '' ?>" href="/admin/products.php">商品追加</a>
       <a class="nav-link" href="/admin/index.php#product-image">商品画像</a>
       <a class="nav-link" href="/admin/export.php">CSVエクスポート</a>
       <hr class="border-light opacity-25">
