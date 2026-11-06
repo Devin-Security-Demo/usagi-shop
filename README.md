@@ -9,7 +9,7 @@ A small e-commerce site for rabbit supplies, built with plain PHP 8.2, Apache mo
 ## 起動方法 / Getting started
 
 ```bash
-cp .env.example .env   # MYSQL_PASSWORD / MYSQL_ROOT_PASSWORD を任意の強いパスワードに変更 / set strong passwords
+cp .env.example .env   # MYSQL_PASSWORD / MYSQL_ROOT_PASSWORD に強いパスワードを設定（空だと起動しません）/ set strong passwords (required)
 docker compose up -d
 ```
 
