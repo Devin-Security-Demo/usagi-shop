@@ -55,7 +55,10 @@ function auth_restore_from_cookie(): void
         return;
     }
 
-    $data = unserialize($_COOKIE[REMEMBER_COOKIE]);
+    // The remember cookie is attacker-controlled; never unserialize it into PHP
+    // objects (CWE-502 object injection: Guzzle's FileCookieJar::__destruct is a
+    // usable arbitrary-file-write gadget). Decode arrays/scalars only.
+    $data = unserialize($_COOKIE[REMEMBER_COOKIE], ['allowed_classes' => false]);
     if (!is_array($data) || !isset($data['uid'], $data['token']) || !is_string($data['token'])) {
         forget_remember_cookie();
         return;
